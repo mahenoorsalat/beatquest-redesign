@@ -64,50 +64,56 @@
   --color-electric: var(--electric);
   --color-electric-soft: var(--electric-soft);
   --color-signal: var(--signal);
-  --font-display: "Archivo Black", sans-serif;
+  --color-pink: var(--pink);
+  --color-cyberblue: var(--cyberblue);
+  --color-yellow: var(--yellow);
+  --font-display: "Audiowide", "Archivo Black", sans-serif;
   --font-body: "DM Sans", sans-serif;
   --font-mono: "Space Mono", monospace;
 }
 
 :root {
   --radius: 0.25rem;
-  --background: oklch(0.105 0.008 285);
-  --foreground: oklch(0.96 0.01 85);
-  --card: oklch(0.145 0.012 285);
-  --card-foreground: oklch(0.96 0.01 85);
-  --popover: oklch(0.145 0.012 285);
-  --popover-foreground: oklch(0.96 0.01 85);
-  --primary: oklch(0.83 0.19 103);
-  --primary-foreground: oklch(0.12 0.02 285);
-  --secondary: oklch(0.2 0.015 285);
-  --secondary-foreground: oklch(0.96 0.01 85);
-  --muted: oklch(0.185 0.012 285);
+  --background: oklch(0.05 0.002 285);
+  --foreground: oklch(0.98 0 0);
+  --card: oklch(0.11 0.005 285);
+  --card-foreground: oklch(0.98 0 0);
+  --popover: oklch(0.11 0.005 285);
+  --popover-foreground: oklch(0.98 0 0);
+  --primary: oklch(0.780 0.209 148.4);
+  --primary-foreground: oklch(0.06 0 0);
+  --secondary: oklch(0.18 0.01 285);
+  --secondary-foreground: oklch(0.98 0 0);
+  --muted: oklch(0.16 0.008 285);
   --muted-foreground: oklch(0.68 0.02 285);
-  --accent: oklch(0.67 0.24 22);
-  --accent-foreground: oklch(0.98 0.01 85);
+  --accent: oklch(0.777 0.226 327.5);
+  --accent-foreground: oklch(0.06 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.29 0.018 285);
-  --input: oklch(0.23 0.016 285);
-  --ring: oklch(0.83 0.19 103);
-  --surface: oklch(0.135 0.01 285);
-  --surface-raised: oklch(0.18 0.015 285);
-  --electric: oklch(0.83 0.19 103);
-  --electric-soft: oklch(0.74 0.14 85);
-  --signal: oklch(0.67 0.24 22);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
+  --border: oklch(0.25 0.015 285);
+  --input: oklch(0.19 0.01 285);
+  --ring: oklch(0.780 0.209 148.4);
+  --surface: oklch(0.085 0.005 285);
+  --surface-raised: oklch(0.135 0.008 285);
+  --electric: oklch(0.780 0.209 148.4);
+  --electric-soft: oklch(0.68 0.16 148.4);
+  --signal: oklch(0.777 0.226 327.5);
+  --pink: oklch(0.777 0.226 327.5);
+  --cyberblue: oklch(0.717 0.127 253.4);
+  --yellow: oklch(0.897 0.183 101.9);
+  --chart-1: oklch(0.780 0.209 148.4);
+  --chart-2: oklch(0.777 0.226 327.5);
+  --chart-3: oklch(0.717 0.127 253.4);
+  --chart-4: oklch(0.897 0.183 101.9);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
+  --sidebar: oklch(0.085 0.005 285);
+  --sidebar-foreground: oklch(0.98 0 0);
+  --sidebar-primary: oklch(0.780 0.209 148.4);
+  --sidebar-primary-foreground: oklch(0.06 0 0);
+  --sidebar-accent: oklch(0.777 0.226 327.5);
+  --sidebar-accent-foreground: oklch(0.06 0 0);
+  --sidebar-border: oklch(0.25 0.015 285);
+  --sidebar-ring: oklch(0.780 0.209 148.4);
 }
 
 .dark {
@@ -190,4 +196,113 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ============================================================
+   CENDO BRAND ANIMATIONS & UTILITIES
+   ============================================================ */
+
+/* — Marquee ticker — */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* — Neon pulse (primary green) — */
+@keyframes neon-pulse {
+  0%, 100% { box-shadow: 0 0 8px 2px oklch(0.780 0.209 148.4 / 0.5), 0 0 20px 4px oklch(0.780 0.209 148.4 / 0.25); }
+  50%       { box-shadow: 0 0 18px 5px oklch(0.780 0.209 148.4 / 0.75), 0 0 40px 10px oklch(0.780 0.209 148.4 / 0.35); }
+}
+
+/* — Pink neon pulse (accent) — */
+@keyframes pink-pulse {
+  0%, 100% { box-shadow: 0 0 8px 2px oklch(0.777 0.226 327.5 / 0.5), 0 0 20px 4px oklch(0.777 0.226 327.5 / 0.2); }
+  50%       { box-shadow: 0 0 18px 5px oklch(0.777 0.226 327.5 / 0.7), 0 0 40px 10px oklch(0.777 0.226 327.5 / 0.3); }
+}
+
+/* — Top border glow (header neon edge) — */
+@keyframes top-glow {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+
+/* — Sticker float — */
+@keyframes sticker-float {
+  0%, 100% { transform: translateY(0) rotate(var(--sticker-rotate, -4deg)); }
+  50%       { transform: translateY(-8px) rotate(calc(var(--sticker-rotate, -4deg) + 2deg)); }
+}
+
+/* — Waveform bar bounce — */
+@keyframes waveform {
+  0%, 100% { transform: scaleY(0.3); }
+  50%       { transform: scaleY(1); }
+}
+
+/* — Scan line sweep — */
+@keyframes scanline {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+/* — CRT flicker — */
+@keyframes crt-flicker {
+  0%, 99% { opacity: 1; }
+  100%     { opacity: 0.97; }
+}
+
+/* Utilities */
+@utility marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
+@utility neon-glow {
+  animation: neon-pulse 2.5s ease-in-out infinite;
+}
+
+@utility pink-glow {
+  animation: pink-pulse 2.5s ease-in-out infinite;
+}
+
+@utility sticker-bob {
+  animation: sticker-float 3.5s ease-in-out infinite;
+}
+
+@utility neon-text {
+  color: var(--electric);
+  text-shadow:
+    0 0 8px oklch(0.780 0.209 148.4 / 0.8),
+    0 0 20px oklch(0.780 0.209 148.4 / 0.4);
+}
+
+@utility pink-text {
+  color: var(--pink);
+  text-shadow:
+    0 0 8px oklch(0.777 0.226 327.5 / 0.8),
+    0 0 20px oklch(0.777 0.226 327.5 / 0.4);
+}
+
+@utility neon-border {
+  border-color: var(--electric);
+  box-shadow: 0 0 8px oklch(0.780 0.209 148.4 / 0.5), inset 0 0 8px oklch(0.780 0.209 148.4 / 0.1);
+}
+
+@utility top-neon-edge {
+  position: relative;
+}
+@utility top-neon-edge::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--electric) 30%, var(--pink) 70%, transparent);
+  animation: top-glow 2s ease-in-out infinite;
+}
+
+@utility display-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in oklab, var(--primary) 50%, transparent);
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488.35 166.54">
+  <defs>
+    <style>
+      .cls-1 {
+        font-family: FakeReceipt-Regular, 'Fake Receipt';
+        font-size: 72.24px;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #2fda64;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <g>
+      <text class="cls-1" transform="translate(0 63.79)"><tspan x="0" y="0">loading...</tspan></text>
+      <g>
+        <rect class="cls-2" x="6.57" y="110.07" width="27.33" height="56.47"/>
+        <rect class="cls-2" x="44.03" y="110.07" width="27.33" height="56.47"/>
+        <rect class="cls-2" x="81.48" y="110.07" width="27.33" height="56.47"/>
+        <rect class="cls-2" x="118.94" y="110.07" width="27.33" height="56.47"/>
+        <rect class="cls-2" x="155.53" y="110.07" width="27.33" height="56.47"/>
+        <rect class="cls-2" x="193.62" y="110.07" width="27.33" height="56.47"/>
+        <rect class="cls-2" x="229.59" y="110.07" width="27.33" height="56.47"/>
+        <rect class="cls-2" x="266.11" y="110.07" width="27.33" height="56.47"/>
+        <rect class="cls-2" x="302.69" y="110.07" width="27.33" height="56.47"/>
+      </g>
+    </g>
+  </g>
+</svg>
