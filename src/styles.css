@@ -250,6 +250,34 @@
   100%     { opacity: 0.97; }
 }
 
+/* — Hero Pack Gentle Float — */
+@keyframes hero-float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(0.5deg);
+  }
+}
+
+/* — Ambient Glow Drift — */
+@keyframes glow-drift {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.12;
+  }
+  50% {
+    transform: translate(25px, -18px) scale(1.15);
+    opacity: 0.22;
+  }
+}
+
+/* — Button Shimmer Line — */
+@keyframes shimmer-slide {
+  0% { transform: translateX(-100%) skewX(-20deg); }
+  100% { transform: translateX(200%) skewX(-20deg); }
+}
+
 /* Utilities */
 @utility marquee-track {
   display: flex;
@@ -267,6 +295,14 @@
 
 @utility sticker-bob {
   animation: sticker-float 3.5s ease-in-out infinite;
+}
+
+@utility hero-floating {
+  animation: hero-float 5.5s ease-in-out infinite;
+}
+
+@utility ambient-drift {
+  animation: glow-drift 8s ease-in-out infinite;
 }
 
 @utility neon-text {
@@ -300,5 +336,13 @@
   height: 2px;
   background: linear-gradient(90deg, transparent, var(--electric) 30%, var(--pink) 70%, transparent);
   animation: top-glow 2s ease-in-out infinite;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 

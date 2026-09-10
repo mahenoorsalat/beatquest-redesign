@@ -90,21 +90,65 @@ function NeonTopEdge() {
 function Sticker({
   src, alt, className = "", rotate = -4, delay = 0,
 }: { src: string; alt: string; className?: string; rotate?: number; delay?: number }) {
+  const webpSrc = src.replace(/\.png$/, ".webp");
   return (
-    <img
-      src={src}
-      alt={alt}
-      className={`pointer-events-none select-none ${className}`}
-      style={{
-        "--sticker-rotate": `${rotate}deg`,
-        animation: `sticker-float 3.5s ease-in-out ${delay}s infinite`,
-        transform: `rotate(${rotate}deg)`,
-        filter: "drop-shadow(0 4px 16px oklch(0 0 0 / 0.6))",
-      } as React.CSSProperties}
-      draggable={false}
-    />
+    <picture className={`pointer-events-none select-none transition-transform duration-300 hover:scale-110 ${className}`}>
+      <source srcSet={webpSrc} type="image/webp" />
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+        className="size-full object-contain"
+        style={{
+          "--sticker-rotate": `${rotate}deg`,
+          animation: `sticker-float 3.5s ease-in-out ${delay}s infinite`,
+          transform: `rotate(${rotate}deg)`,
+          filter: "drop-shadow(0 4px 16px oklch(0 0 0 / 0.6))",
+        } as React.CSSProperties}
+        draggable={false}
+      />
+    </picture>
   );
 }
+
+function OptimizedImage({
+  src,
+  alt,
+  className = "",
+  style,
+  priority = false,
+  width,
+  height,
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  style?: React.CSSProperties;
+  priority?: boolean;
+  width?: number;
+  height?: number;
+}) {
+  const webpSrc = src.replace(/\.png$/, ".webp");
+  return (
+    <picture className="contents">
+      <source srcSet={webpSrc} type="image/webp" />
+      <img
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        loading={priority ? "eager" : "lazy"}
+        decoding="async"
+        // @ts-expect-error fetchpriority attribute
+        fetchpriority={priority ? "high" : "auto"}
+        className={className}
+        style={style}
+      />
+    </picture>
+  );
+}
+
 
 function AudioPlayer() {
   const audioRefs = useRef<(HTMLAudioElement | null)[]>([]);
@@ -256,7 +300,7 @@ function Index() {
   }
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="min-h-screen bg-background text-foreground overflow-x-hidden">
       {/* Neon top strip */}
       <NeonTopEdge />
 
@@ -264,7 +308,15 @@ function Index() {
       <header className="fixed inset-x-0 top-0 z-50 border-b border-border/70 bg-background/90 backdrop-blur-xl">
         <div className="mx-auto grid h-17 max-w-7xl grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3 px-4 sm:px-6 lg:px-8">
           <a href="#top" aria-label="Cendo Sounds home" className="flex min-w-0 items-center">
-            <img src={logoAsset.url} alt="Cendo Sounds" className="h-7 w-auto max-w-36 object-contain object-left" style={{ filter: "invert(1)" }} />
+            <OptimizedImage
+              src={logoAsset.url}
+              alt="Cendo Sounds"
+              priority={true}
+              width={144}
+              height={28}
+              className="h-7 w-auto max-w-36 object-contain object-left"
+              style={{ filter: "invert(1)" }}
+            />
           </a>
           <nav className="hidden items-center gap-7 text-xs font-bold uppercase text-muted-foreground lg:flex" aria-label="Main navigation">
             {[["BeatQuest","#beatquest"],["Sound Packs","#sound-packs"],["About","#about"],["FAQ","#faq"]].map(([label, href]) => (
@@ -273,13 +325,13 @@ function Index() {
           </nav>
           <a
             href={STORE_URL}
-            className="hidden h-10 items-center gap-2 bg-primary px-5 text-xs font-bold uppercase text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-[0_0_16px_oklch(0.780_0.209_148.4/0.5)] sm:inline-flex neon-glow"
+            className="hidden h-10 items-center gap-2 bg-primary px-5 text-xs font-bold uppercase text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-[0_0_16px_oklch(0.780_0.209_148.4/0.5)] active:scale-95 sm:inline-flex neon-glow"
             target="_blank" rel="noreferrer"
           >
             Get BeatQuest <ArrowRight size={15} />
           </a>
           <button
-            className="grid size-10 place-items-center border border-border text-foreground lg:hidden hover:border-primary transition-colors"
+            className="grid size-10 place-items-center border border-border text-foreground lg:hidden hover:border-primary transition-colors active:scale-95"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
@@ -288,13 +340,20 @@ function Index() {
           </button>
         </div>
         {menuOpen && (
-          <nav className="border-t border-border bg-background px-4 py-5 lg:hidden" aria-label="Mobile navigation">
+          <nav className="border-t border-border bg-background/95 backdrop-blur-2xl px-4 py-5 lg:hidden animate-in fade-in slide-in-from-top-2 duration-200" aria-label="Mobile navigation">
             <div className="grid gap-1">
               {[["BeatQuest","#beatquest"],["Sound Packs","#sound-packs"],["About","#about"],["FAQ","#faq"]].map(([label, href]) => (
-                <a key={label} href={href} onClick={() => setMenuOpen(false)} className="flex min-h-12 items-center justify-between border-b border-border text-sm font-bold uppercase hover:text-primary transition-colors">
+                <a key={label} href={href} onClick={() => setMenuOpen(false)} className="flex min-h-12 items-center justify-between border-b border-border/60 text-sm font-bold uppercase hover:text-primary transition-colors">
                   {label}<ChevronRight size={17} />
                 </a>
               ))}
+              <a
+                href={STORE_URL}
+                target="_blank" rel="noreferrer"
+                className="mt-4 flex h-12 items-center justify-center gap-2 bg-primary text-xs font-bold uppercase text-primary-foreground neon-glow active:scale-95 transition-transform"
+              >
+                Get BeatQuest — $79.99 <ArrowRight size={15} />
+              </a>
             </div>
           </nav>
         )}
@@ -302,9 +361,9 @@ function Index() {
 
       {/* ── HERO ── */}
       <section id="top" className="grid-field relative min-h-[94svh] overflow-hidden border-b border-border pt-17">
-        {/* ambient glow blobs */}
-        <div className="pointer-events-none absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-primary/10 blur-[120px]" />
-        <div className="pointer-events-none absolute -right-20 top-1/3 h-80 w-80 rounded-full bg-accent/8 blur-[100px]" />
+        {/* ambient glow blobs with drift animation */}
+        <div className="pointer-events-none absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-primary/15 blur-[120px] ambient-drift" />
+        <div className="pointer-events-none absolute -right-20 top-1/3 h-80 w-80 rounded-full bg-accent/10 blur-[100px] ambient-drift" style={{ animationDelay: "4s" }} />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-background to-transparent" />
 
         <div className="relative mx-auto grid min-h-[calc(94svh-4.25rem)] max-w-7xl items-center px-4 py-12 sm:px-6 lg:grid-cols-[0.88fr_1.12fr] lg:px-8 lg:py-16">
@@ -313,28 +372,28 @@ function Index() {
             <p className="mb-5 flex items-center gap-3 font-mono text-[11px] font-bold uppercase text-primary">
               <span className="h-px w-8 bg-primary" />Hip-hop production toolkit
             </p>
-            <h1 className="font-display text-[clamp(4rem,12vw,9.5rem)] leading-[0.77] uppercase tracking-normal">
+            <h1 className="font-display text-[clamp(3.1rem,11.5vw,9.5rem)] leading-[0.82] uppercase tracking-normal">
               Beat<br /><span className="display-outline">Quest</span>
             </h1>
-            <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">
+            <p className="mt-6 max-w-md text-base sm:text-lg leading-relaxed text-muted-foreground">
               2 GB of drums, one-shots, stems, MIDI — and five bonus sound packs included at no extra cost.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+            <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
               <a
                 href={STORE_URL}
                 target="_blank" rel="noreferrer"
-                className="inline-flex h-13 items-center gap-3 bg-primary px-7 text-sm font-bold uppercase text-primary-foreground neon-glow transition-all hover:-translate-y-0.5"
+                className="inline-flex h-13 items-center justify-center gap-3 bg-primary px-7 text-sm font-bold uppercase text-primary-foreground neon-glow transition-all hover:-translate-y-0.5 active:scale-95"
               >
                 Get BeatQuest — $79.99 <ArrowRight size={17} />
               </a>
-              <a href="#beta" className="inline-flex h-13 items-center gap-3 border border-border px-7 text-sm font-bold uppercase transition-all hover:border-primary hover:text-primary hover:-translate-y-0.5">
+              <a href="#beta" className="inline-flex h-13 items-center justify-center gap-3 border border-border px-7 text-sm font-bold uppercase transition-all hover:border-primary hover:text-primary hover:-translate-y-0.5 active:scale-95">
                 Free Beta <ArrowDown size={17} />
               </a>
             </div>
-            <div className="mt-8 flex gap-8">
+            <div className="mt-8 grid grid-cols-3 gap-2 border-t border-border/40 pt-6 sm:flex sm:gap-8 sm:border-t-0 sm:pt-0">
               {[["2 GB","Royalty-Free"], ["557","Loops & Stems"], ["$79.99","One-Time"]].map(([val, label]) => (
                 <div key={label}>
-                  <strong className="block font-mono text-2xl text-primary">{val}</strong>
+                  <strong className="block font-mono text-xl sm:text-2xl text-primary">{val}</strong>
                   <span className="font-mono text-[9px] uppercase text-muted-foreground">{label}</span>
                 </div>
               ))}
@@ -342,18 +401,21 @@ function Index() {
           </div>
 
           {/* hero image + stickers */}
-          <div className="relative order-1 flex justify-center lg:order-2">
-            <div className="relative">
-              <img
+          <div className="relative order-1 flex justify-center lg:order-2 w-full max-w-full px-2">
+            <div className="relative hero-floating">
+              <OptimizedImage
                 src={bundleAsset.url}
                 alt="BeatQuest full sound pack bundle"
-                className="relative z-10 w-full max-w-2xl object-contain drop-shadow-2xl"
+                priority={true}
+                width={800}
+                height={600}
+                className="relative z-10 w-full max-w-lg lg:max-w-2xl object-contain drop-shadow-2xl"
                 style={{ mixBlendMode: "lighten", filter: "drop-shadow(0 0 40px oklch(0.780 0.209 148.4 / 0.25))" }}
               />
               {/* stickers around hero image */}
-              <Sticker src="/stickers/sickbeatsonly_sticker.png"         alt="Sick Beats"          className="absolute -top-8 -right-4 z-20 h-24 w-auto lg:h-28"  rotate={12}  delay={0}   />
-              <Sticker src="/stickers/cendosticker.png"                  alt="Cendo"               className="absolute bottom-8 -left-8 z-20 h-20 w-auto lg:h-24"   rotate={-8}  delay={0.8} />
-              <Sticker src="/stickers/greenblack_smileysticker.png"      alt="Cendo Smiley"        className="absolute -bottom-4 right-4 z-20 h-18 w-auto lg:h-22"  rotate={6}   delay={1.4} />
+              <Sticker src="/stickers/sickbeatsonly_sticker.png"         alt="Sick Beats"          className="absolute -top-6 -right-2 z-20 h-20 w-auto sm:h-24 lg:h-28"  rotate={12}  delay={0}   />
+              <Sticker src="/stickers/cendosticker.png"                  alt="Cendo"               className="absolute bottom-6 -left-4 z-20 h-16 w-auto sm:h-20 lg:h-24"   rotate={-8}  delay={0.8} />
+              <Sticker src="/stickers/greenblack_smileysticker.png"      alt="Cendo Smiley"        className="absolute -bottom-3 right-4 z-20 h-16 w-auto sm:h-18 lg:h-22"  rotate={6}   delay={1.4} />
             </div>
           </div>
         </div>
@@ -373,16 +435,18 @@ function Index() {
           <div className="relative flex min-h-105 items-center justify-center overflow-hidden border-b border-border p-8 lg:border-b-0 lg:border-r">
             <div className="absolute left-5 top-5 font-mono text-[10px] uppercase text-muted-foreground">Free access / Beta edition</div>
             <div className="absolute size-64 rounded-full bg-primary/10 blur-3xl" />
-            <img
+            <OptimizedImage
               src={betaAsset.url}
               alt="BeatQuest Beta SoundPax artwork"
+              width={600}
+              height={500}
               className="relative max-h-88 w-full object-contain"
-              loading="lazy"
               style={{ mixBlendMode: "lighten", filter: "drop-shadow(0 0 30px oklch(0.780 0.209 148.4 / 0.2))" }}
             />
             {/* sticker on beta artwork */}
             <Sticker src="/stickers/pinkbluesmiley.png" alt="Smiley" className="absolute bottom-4 right-4 h-20 w-auto" rotate={-6} delay={1} />
           </div>
+
           {/* form */}
           <div className="flex flex-col justify-center p-6 sm:p-10 lg:p-16">
             <p className="font-mono text-[11px] font-bold uppercase text-primary">Try before you commit</p>
@@ -450,15 +514,16 @@ function Index() {
         <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-2 lg:gap-20">
           <div className="relative">
             <span className="absolute -left-10 -top-16 font-display text-[10rem] text-foreground/[0.025]">01</span>
-            <img
+            <OptimizedImage
               src={bundleAsset.url}
               alt="BeatQuest main pack and five upgrade packs"
+              width={700}
+              height={550}
               className="relative w-full object-contain"
-              loading="lazy"
               style={{ mixBlendMode: "lighten", filter: "drop-shadow(0 0 50px oklch(0.780 0.209 148.4 / 0.2))" }}
             />
             {/* decorative sticker */}
-            <Sticker src="/stickers/alien headphones.png" alt="Alien" className="absolute -top-10 right-0 h-28 w-auto" rotate={8} delay={0.5} />
+            <Sticker src="/stickers/alien headphones.png" alt="Alien" className="absolute -top-10 right-0 h-24 w-auto sm:h-28" rotate={8} delay={0.5} />
           </div>
           <div>
             <p className="font-mono text-[11px] font-bold uppercase text-primary">The complete package</p>
@@ -532,22 +597,23 @@ function Index() {
             </div>
             <p className="max-w-md text-muted-foreground">More rhythm, texture, and movement. Included with BeatQuest or available individually for $9.99.</p>
           </div>
-          <div className="mt-12 flex snap-x gap-4 overflow-x-auto pb-5 lg:grid lg:grid-cols-5 lg:overflow-visible">
+          <div className="mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 hide-scrollbar lg:grid lg:grid-cols-5 lg:overflow-visible" style={{ WebkitOverflowScrolling: "touch" }}>
             {bonuses.map((bonus, index) => (
               <a
                 key={bonus.name}
                 href={bonus.href}
                 target="_blank" rel="noreferrer"
-                className="group min-w-[78vw] snap-center border border-border bg-surface transition-all duration-300 hover:-translate-y-2 hover:border-primary sm:min-w-80 lg:min-w-0"
+                className="group min-w-[76vw] snap-center border border-border bg-surface transition-all duration-300 hover:-translate-y-2 hover:border-primary active:scale-[0.98] sm:min-w-80 lg:min-w-0"
                 style={{ "--tw-shadow": "0 0 20px oklch(0.780 0.209 148.4 / 0)" } as React.CSSProperties}
                 onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 0 20px oklch(0.780 0.209 148.4 / 0.2)")}
                 onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "")}
               >
                 <div className="relative aspect-square overflow-hidden border-b border-border">
-                  <img
+                  <OptimizedImage
                     src={bonus.image}
                     alt={`${bonus.name} upgrade pack artwork`}
-                    loading="lazy"
+                    width={400}
+                    height={400}
                     className="size-full object-contain p-3 transition-transform duration-500 group-hover:scale-105"
                     style={{ mixBlendMode: "lighten" }}
                   />
@@ -609,17 +675,17 @@ function Index() {
             BeatQuest + <span className="pink-text">5 Packs.</span>
           </h2>
           <p className="mx-auto mt-8 max-w-lg text-lg text-muted-foreground">Everything you need to move fast, sound original, and keep your tracks royalty-free.</p>
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
+          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
             <a
               href={STORE_URL}
               target="_blank" rel="noreferrer"
-              className="inline-flex h-14 items-center gap-3 bg-primary px-8 text-base font-bold uppercase text-primary-foreground neon-glow transition-all hover:-translate-y-0.5"
+              className="inline-flex h-14 items-center justify-center gap-3 bg-primary px-8 text-base font-bold uppercase text-primary-foreground neon-glow transition-all hover:-translate-y-0.5 active:scale-95"
             >
               Get BeatQuest — $79.99 <ArrowRight size={18} />
             </a>
             <a
               href="#beta"
-              className="inline-flex h-14 items-center gap-3 border border-border px-8 text-base font-bold uppercase transition-all hover:border-primary hover:text-primary hover:-translate-y-0.5"
+              className="inline-flex h-14 items-center justify-center gap-3 border border-border px-8 text-base font-bold uppercase transition-all hover:border-primary hover:text-primary hover:-translate-y-0.5 active:scale-95"
             >
               Try Free Beta <Zap size={16} />
             </a>
@@ -631,7 +697,14 @@ function Index() {
       <footer className="border-t border-border px-4 py-10 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-7xl gap-8 sm:grid-cols-[1fr_auto] sm:items-end">
           <div>
-            <img src={logoAsset.url} alt="Cendo Sounds" className="h-7 w-auto max-w-40 object-contain object-left" style={{ filter: "invert(1)" }} />
+            <OptimizedImage
+              src={logoAsset.url}
+              alt="Cendo Sounds"
+              width={140}
+              height={28}
+              className="h-7 w-auto max-w-40 object-contain object-left"
+              style={{ filter: "invert(1)" }}
+            />
             <p className="mt-4 max-w-xs text-xs leading-relaxed text-muted-foreground">Premium, royalty-free sounds for producers who want to move fast and sound original.</p>
           </div>
           <div className="flex flex-wrap gap-x-5 gap-y-3 text-xs font-bold uppercase">
