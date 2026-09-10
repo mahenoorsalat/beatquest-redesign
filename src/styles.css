@@ -288,10 +288,10 @@
   box-shadow: 0 0 8px oklch(0.780 0.209 148.4 / 0.5), inset 0 0 8px oklch(0.780 0.209 148.4 / 0.1);
 }
 
-@utility top-neon-edge {
+.top-neon-edge {
   position: relative;
 }
-@utility top-neon-edge::before {
+.top-neon-edge::before {
   content: "";
   position: absolute;
   top: 0;
@@ -302,7 +302,3 @@
   animation: top-glow 2s ease-in-out infinite;
 }
 
-@utility display-outline {
-  color: transparent;
-  -webkit-text-stroke: 1px color-mix(in oklab, var(--primary) 50%, transparent);
-}
